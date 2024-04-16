@@ -17,7 +17,8 @@ class SolifiVehicleSeeder extends Seeder
     public function run()
     {
         // Read CSV file
-        $file = fopen(Storage::path('../../data/full_solifi_vehicle_table.csv'), 'r');
+        // $file = fopen(Storage::path('../../data/full_solifi_vehicle_table.csv'), 'r');
+        $file = fopen(Storage::path('../../data/solifi_ford_data.csv'), 'r');
         $header = fgetcsv($file); // Get the header row
 
         // Read data and insert into database
@@ -26,6 +27,18 @@ class SolifiVehicleSeeder extends Seeder
             foreach ($row as $key => $value) {
                 if ($value === 'NULL') {
                     $row[$key] = null;
+                }
+
+                if ($value === '') {
+                    $row[$key] = null;
+                }
+
+                if ($value === 'TRUE') {
+                    $row[$key] = true;
+                }
+
+                if ($value === 'FALSE') {
+                    $row[$key] = false;
                 }
             }
 
