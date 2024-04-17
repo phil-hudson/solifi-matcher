@@ -18,27 +18,21 @@ class SolifiVehicleSeeder extends Seeder
     {
         // Read CSV file
         // $file = fopen(Storage::path('../../data/full_solifi_vehicle_table.csv'), 'r');
-        $file = fopen(Storage::path('../../data/solifi_ford_data.csv'), 'r');
+        $file = fopen(Storage::path('../../data/full_vehicles_table.csv'), 'r');
         $header = fgetcsv($file); // Get the header row
 
         // Read data and insert into database
         while ($row = fgetcsv($file)) {
             // Convert empty cells to NULL
             foreach ($row as $key => $value) {
-                if ($value === 'NULL') {
+                if ($value === 'NULL' || $value === '' && $header[$key] !== 'vehicle_tree_description') {
                     $row[$key] = null;
-                }
-
-                if ($value === '') {
-                    $row[$key] = null;
-                }
-
-                if ($value === 'TRUE') {
+                } elseif ($value === 'TRUE') {
                     $row[$key] = true;
-                }
-
-                if ($value === 'FALSE') {
+                } elseif ($value === 'FALSE') {
                     $row[$key] = false;
+                } elseif (in_array($key, ['special_edition', 'current_vehicle', 'commercial', 'reclaim_vat']) && ($value === '0' || $value === '1')) {
+                    $row[$key] = ($value === '1');
                 }
             }
 
